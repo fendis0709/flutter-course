@@ -74,10 +74,9 @@ class Products with ChangeNotifier {
     try {
       final response = await http.get(url);
       final products = json.decode(response.body) as Map<String, dynamic>;
-
-      _items = [];
+      final List<Product> _products = [];
       products.forEach((_id, _data) {
-        _items.add(Product(
+        _products.add(Product(
           id: _id,
           title: _data['title'],
           price: _data['price'],
@@ -90,6 +89,9 @@ class Products with ChangeNotifier {
           'data': _data,
         });
       });
+
+      _items = _products;
+      notifyListeners();
     } catch (error) {
       throw (error);
     }

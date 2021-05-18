@@ -20,26 +20,17 @@ class ProductsOverviewScreen extends StatefulWidget {
 
 class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   var _showOnlyFavorites = false;
-  var _isInitialized = true;
+  // var _isInitialized = true;
   var _isLoading = false;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    if (_isInitialized) {
+  void initState() {
+    Provider.of<Products>(context, listen: false).getProduct().then((_) {
       setState(() {
-        _isLoading = true;
+        _isLoading = false;
       });
-
-      Provider.of<Products>(context).getProduct().then((_) {
-        setState(() {
-          _isLoading = false;
-        });
-      });
-
-      _isInitialized = false;
-    }
+    });
+    super.initState();
   }
 
   Future<void> refreshProducts(BuildContext context) async {
