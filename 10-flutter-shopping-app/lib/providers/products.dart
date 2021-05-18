@@ -67,10 +67,10 @@ class Products with ChangeNotifier {
   //   notifyListeners();
   // }
 
-  void addProduct(Product product) {
+  Future<void> addProduct(Product product) {
     final url = Uri.https(
         'flutter-0709-default-rtdb.asia-southeast1.firebasedatabase.app',
-        'products.json');
+        'products');
     final data = json.encode({
       'title': product.title,
       'description': product.description,
@@ -78,7 +78,8 @@ class Products with ChangeNotifier {
       'price': product.price,
       'isFavorite': product.isFavorite,
     });
-    http.post(url, body: data).then((response) {
+
+    return http.post(url, body: data).then((response) {
       var responseBody = json.decode(response.body);
       final newProduct = Product(
         title: product.title,
@@ -89,6 +90,8 @@ class Products with ChangeNotifier {
       );
       _items.add(newProduct);
       notifyListeners();
+    }).catchError((error) {
+      throw error;
     });
   }
 
