@@ -42,6 +42,10 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
     }
   }
 
+  Future<void> refreshProducts(BuildContext context) async {
+    await Provider.of<Products>(context, listen: false).getProduct();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,7 +97,12 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
           ? Center(
               child: CircularProgressIndicator(),
             )
-          : ProductsGrid(_showOnlyFavorites),
+          : RefreshIndicator(
+              onRefresh: () {
+                return refreshProducts(context);
+              },
+              child: ProductsGrid(_showOnlyFavorites),
+            ),
     );
   }
 }

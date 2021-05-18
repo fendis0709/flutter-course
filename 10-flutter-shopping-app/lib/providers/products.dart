@@ -84,6 +84,11 @@ class Products with ChangeNotifier {
           imageUrl: _data['imageUrl'],
           description: _data['description'],
         ));
+
+        print({
+          'id': _id,
+          'data': _data,
+        });
       });
     } catch (error) {
       throw (error);
@@ -119,18 +124,43 @@ class Products with ChangeNotifier {
     }
   }
 
-  void updateProduct(String id, Product newProduct) {
+  Future<void> updateProduct(String id, Product newProduct) async {
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if (prodIndex >= 0) {
+      final url = Uri.https(
+          'flutter-0709-default-rtdb.asia-southeast1.firebasedatabase.app',
+          'products/$id.json');
+      final data = json.encode({
+        'title': newProduct.title,
+        'description': newProduct.description,
+        'imageUrl': newProduct.imageUrl,
+        'price': newProduct.price,
+      });
+
+      try {
+        await http.put(url, body: data);
+      } catch (error) {
+        throw (error);
+      }
+
       _items[prodIndex] = newProduct;
       notifyListeners();
-    } else {
-      print('...');
     }
   }
 
-  void deleteProduct(String id) {
-    _items.removeWhere((prod) => prod.id == id);
-    notifyListeners();
+  void deleteProduct(String id) async {
+    final url = Uri.https(
+        'flutter-0709-default-rtdb.asia-southeast1.firebasedatabase.app',
+        'products/$id.json');
+
+    try {
+      var response = await http.delete(url);
+      print(response.statusCode);
+
+      _items.removeWhere((prod) => prod.id == id);
+      notifyListeners();
+    } catch (error) {
+      print('Something went wrong');
+    }
   }
 }
