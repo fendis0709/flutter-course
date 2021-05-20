@@ -33,9 +33,12 @@ class Products with ChangeNotifier {
     ),
   ];
 
-  List<Product> get products {
-    print('GETTER PRODUCTS');
+  List<Product> get all {
     return [..._products];
+  }
+
+  List<Product> get favorites {
+    return _products.where((_product) => _product.isFavorite).toList();
   }
 
   Product find(id) {
