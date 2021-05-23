@@ -11,6 +11,23 @@ class UserProductItem extends StatelessWidget {
 
   UserProductItem(this.id, this.title, this.imageUrl);
 
+  // Menampilkan pesan sukses hapus data
+  showSnackbarMessage({
+    BuildContext context,
+    String message = 'Product deleted!',
+  }) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        action: SnackBarAction(
+          label: 'OK',
+          textColor: Theme.of(context).primaryColor,
+          onPressed: () => null,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -25,14 +42,29 @@ class UserProductItem extends StatelessWidget {
             IconButton(
               icon: Icon(Icons.edit),
               onPressed: () {
-                Navigator.of(context).pushNamed(EditProductScreen.routeName, arguments: id);
+                Navigator.of(context).pushNamed(
+                  EditProductScreen.routeName,
+                  arguments: id,
+                );
               },
               color: Theme.of(context).primaryColor,
             ),
             IconButton(
               icon: Icon(Icons.delete),
-              onPressed: () {
-                Provider.of<Products>(context, listen: false).deleteProduct(id);
+              onPressed: () async {
+                try {
+                  await Provider.of<Products>(
+                    context,
+                    listen: false,
+                  ).deleteProduct(id);
+
+                  showSnackbarMessage(context: context);
+                } catch (exception) {
+                  showSnackbarMessage(
+                    context: context,
+                    message: exception.toString(),
+                  );
+                }
               },
               color: Theme.of(context).errorColor,
             ),

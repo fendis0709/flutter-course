@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/models/http_exception.dart';
 import 'package:http/http.dart' as http;
 
 import './product.dart';
@@ -82,6 +83,7 @@ class Products with ChangeNotifier {
           price: _data['price'],
           imageUrl: _data['imageUrl'],
           description: _data['description'],
+          isFavorite: _data['isFavorite'],
         ));
 
         print({
@@ -150,10 +152,11 @@ class Products with ChangeNotifier {
     }
   }
 
-  void deleteProduct(String id) async {
+  Future<void> deleteProduct(String id) async {
     final url = Uri.https(
-        'flutter-0709-default-rtdb.asia-southeast1.firebasedatabase.app',
-        'products/$id.json');
+      'flutter-0709-default-rtdb.asia-southeast1.firebasedatabase.app',
+      'products/$id.json',
+    );
 
     try {
       var response = await http.delete(url);
@@ -163,6 +166,7 @@ class Products with ChangeNotifier {
       notifyListeners();
     } catch (error) {
       print('Something went wrong');
+      throw HttpException('Unable to delete. Please try again later.');
     }
   }
 }
