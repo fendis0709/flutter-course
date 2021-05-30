@@ -50,7 +50,7 @@ class _NewTransactionState extends State<NewTransaction> {
               ),
               onSubmitted: (_) => submitData(),
             ),
-            TextButton(
+            ElevatedButton(
               child: Text(
                 'Add Transaction',
                 style: TextStyle(
