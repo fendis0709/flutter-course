@@ -4,8 +4,9 @@ import 'package:flutter_personal_expense_app/models/transaction.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> transactions;
+  final Function _deleteTransaction;
 
-  TransactionList(this.transactions);
+  TransactionList(this.transactions, this._deleteTransaction);
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +54,12 @@ class TransactionList extends StatelessWidget {
                       subtitle: Text(
                         DateFormat('EEE, d MMM yyyy')
                             .format(transactions[index].date),
+                      ),
+                      trailing: IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () {
+                          return _deleteTransaction(transactions[index].id);
+                        },
                       ),
                     ),
                   ),
